@@ -22,9 +22,19 @@
             if (data && data.dir) data.dir();
         }
 
-        
-        new db.tree().setParent().save(function(err, evt){
-            done(err, evt);
+
+        db.tree({id: 5}).findOne(function(err, node) {
+            if (err) done(err);
+            else {
+                node.setParent(3).save(function(err, movedNode) {
+                    if (err) done(err);
+                    else {
+                        assert.equal(movedNode.left, 2);
+                        assert.equal(movedNode.right, 3);
+                        done();
+                    }
+                });
+            }
         });
    
     });

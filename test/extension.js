@@ -7,7 +7,7 @@
 		, assert 		= require('assert')
 		, async 		= require('ee-async')
 		, fs 			= require('fs')
-		, ORM 			= require('../../ee-orm');
+		, ORM 			= require('ee-orm');
 
 
 
@@ -91,9 +91,16 @@
 			orm.reload(done);
 		});
 
-
-		it('should set corrent position parameters when inserting records', function(done) {
+		it('set var should work ;)', function() {
 			db = orm.ee_orm_nestedset_test;
+		});
+
+
+	});
+
+	describe('[Inserting]', function() {
+		it('should set corrent position parameters when inserting records', function(done) {
+			
 
 			new db.tree({name: 'root1'}).setParent().save(function(err, node) {
 				if (err) done(err);
@@ -190,11 +197,47 @@
 			db.tree({name: 'child1.2'}, ['*']).findOne(function(err, model) {
 				if (err) done(err);
 				else {
-					new db.tree({name: 'child1.3'}).before(5).save(function(err, node) {
+					new db.tree({name: 'child1.4'}).before(5).save(function(err, node) {
 						if (err) done(err);
 						else {
 							assert.equal(node.left, 4);
 							assert.equal(node.right, 5);
+							done();
+						}
+					});
+				}
+			});
+		});
+	});
+	
+
+
+	describe('[Updating]', function() {
+		it('setting a new parent, moving left', function(done) {
+			db.tree({id: 5}).findOne(function(err, node) {
+				if (err) done(err);
+				else {
+					node.setParent(2).save(function(err, movedNode) {
+						if (err) done(err);
+						else {
+							assert.equal(movedNode.left, 2);
+							assert.equal(movedNode.right, 3);
+							done();
+						}
+					});
+				}
+			});
+		});
+
+		it('setting a new parent, moving right', function(done) {
+			db.tree({id: 7}).findOne(function(err, node) {
+				if (err) done(err);
+				else {
+					node.setParent(3).save(function(err, movedNode) {
+						if (err) done(err);
+						else {
+							assert.equal(movedNode.left, 12);
+							assert.equal(movedNode.right, 13);
 							done();
 						}
 					});
