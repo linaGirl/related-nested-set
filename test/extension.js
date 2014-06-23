@@ -7,11 +7,11 @@
 		, assert 		= require('assert')
 		, async 		= require('ee-async')
 		, fs 			= require('fs')
-		, ORM 			= require('ee-orm');
+		, ORM 			= require('../../ee-orm');
 
 
 
-	var   TimeStamps = require('../')
+	var   NestedSet = require('../')
 		, sqlStatments
 		, extension
 		, orm
@@ -76,13 +76,13 @@
 		}
 	};
 
-/*
-	describe('The TimeStamps Extension', function() {
+
+	describe('The NestedSet Extension', function() {
 		var oldDate;
 
 		it('should not crash when instatiated', function() {
 			db = orm.ee_orm_nestedset_test;
-			extension = new TimeStamps();
+			extension = new NestedSet();
 		});
 
 
@@ -92,18 +92,114 @@
 		});
 
 
-		it('should set correct timestamps when inserting a new record', function(done) {
+		it('should set corrent position parameters when inserting records', function(done) {
 			db = orm.ee_orm_nestedset_test;
-			new db.event().save(function(err, evt) {
+
+			new db.tree({name: 'root1'}).setParent().save(function(err, node) {
 				if (err) done(err);
 				else {
-					assert.notEqual(evt.created, null);
-					assert.notEqual(evt.updated, null);
-					assert.equal(evt.deleted, null);
-					oldDate = evt.updated;
+					assert.equal(node.left, 1);
+					assert.equal(node.right, 2);
 					done();
 				}
 			});
 		});
+
+		it('should set corrent position parameters when inserting a root node above another node', function(done) {
+			db = orm.ee_orm_nestedset_test;
+
+			new db.tree({name: 'root2'}).setParent().save(function(err, node) {
+				if (err) done(err);
+				else {
+					assert.equal(node.left, 1);
+					assert.equal(node.right, 2);
+					done();
+				}
+			});
+		});
+
+
+		it('should set corrent position parameters when inserting a root node below another node', function(done) {
+			db = orm.ee_orm_nestedset_test;
+
+			new db.tree({name: 'root3'}).setParent(null, true).save(function(err, node) {
+				if (err) done(err);
+				else {
+					assert.equal(node.left, 5);
+					assert.equal(node.right, 6);
+					done();
+				}
+			});
+		});
+
+
+
+		it('should set corrent position parameters when inserting a node as child of another node using an id', function(done) {
+			db = orm.ee_orm_nestedset_test;
+
+			new db.tree({name: 'child1.1'}).setParent(1).save(function(err, node) {
+				if (err) done(err);
+				else {
+					assert.equal(node.left, 4);
+					assert.equal(node.right, 5);
+					done();
+				}
+			});
+		});
+
+
+
+		it('should set corrent position parameters when inserting a node as child of another node using a query', function(done) {
+			db = orm.ee_orm_nestedset_test;
+
+			new db.tree({name: 'child1.2'}).setParent(db.tree({id:1})).save(function(err, node) {
+				if (err) done(err);
+				else {
+					assert.equal(node.left, 4);
+					assert.equal(node.right, 5);
+					done();
+				}
+			});
+		});
+
+
+
+		it('should set corrent position parameters when inserting a node after another node using a model', function(done) {
+			db = orm.ee_orm_nestedset_test;
+
+			db.tree({name: 'child1.2'}, ['*']).findOne(function(err, model) {
+				if (err) done(err);
+				else {
+					new db.tree({name: 'child1.3'}).after(model).save(function(err, node) {
+						if (err) done(err);
+						else {
+							assert.equal(node.left, 6);
+							assert.equal(node.right, 7);
+							done();
+						}
+					});
+				}
+			});
+		});
+
+
+
+		it('should set corrent position parameters when inserting before another node using an id', function(done) {
+			db = orm.ee_orm_nestedset_test;
+
+			db.tree({name: 'child1.2'}, ['*']).findOne(function(err, model) {
+				if (err) done(err);
+				else {
+					new db.tree({name: 'child1.3'}).before(5).save(function(err, node) {
+						if (err) done(err);
+						else {
+							assert.equal(node.left, 4);
+							assert.equal(node.right, 5);
+							done();
+						}
+					});
+				}
+			});
+		});
 	});
-	*/
+	
