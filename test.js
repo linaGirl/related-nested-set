@@ -22,14 +22,9 @@
             if (data && data.dir) data.dir();
         }
 
-
-        new db.event().save(function(err, evt){
-            evt.delete(function(err){
-                if (err) done(err);
-                else {
-                    db.event({id:1}).findOne(done);
-                }
-            });
+        
+        new db.tree().setParent().save(function(err, evt){
+            done(err, evt);
         });
    
     });

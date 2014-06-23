@@ -31,6 +31,6 @@
     , "optionalDependencies": {}
     , "keywords"                    : ["ee", "orm", "nested-set", "extension"]
     , "scripts": {
-        "test"                      : "./node_modules/mocha/bin/mocha --reporter spec"
+        "test"                      : "./node_modules/mocha/bin/mocha --reporter spec --bail"
     }
 }

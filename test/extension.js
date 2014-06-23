@@ -35,7 +35,7 @@
 				config = require('../config.js').db
 			} catch(e) {
 				config = {
-					ee_orm_timestamps_test: {
+					ee_orm_nestedset_test: {
 						  type: 'postgres'
 						, hosts: [
 							{
@@ -56,12 +56,10 @@
 			orm.on('load', done);
 		});
 
-		it('should be able to drop & create the testing schema ('+sqlStatments.length+' raw SQL queries)', function(done){
-			orm.getDatabase('ee_orm_timestamps_test').getConnection(function(err, connection){
+		it('should be able to drop & create the testing schema ('+sqlStatments.length+' raw SQL queries)', function(done) {
+			orm.getDatabase('ee_orm_nestedset_test').getConnection(function(err, connection) {
 				if (err) done(err);
-				else {
-					async.each(sqlStatments, connection.queryRaw.bind(connection), done);
-				}
+				else async.each(sqlStatments, connection.queryRaw.bind(connection), done);
 			});				
 		});
 	});
@@ -78,7 +76,7 @@
 		}
 	};
 
-
+/*
 	describe('The TimeStamps Extension', function() {
 		var oldDate;
 
@@ -108,4 +106,4 @@
 			});
 		});
 	});
-	
+	*/
