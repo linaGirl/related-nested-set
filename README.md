@@ -59,10 +59,10 @@ The nested set has several options you can pass to it.
 
 	querybuilder.loadTree(callback);
 
-The ee-orm querybilder exposes on all nested set tbale the loadTree method. you may build your query
-as ususal, and call the loadTree method insted of the find method.
+The ee-orm querybilder exposes the loadTree method on all nested set tables. You may build your query
+as ususal, and call the loadTree method instead of the find method.
 
-this call returns an array of root nodes (model instances) of the given nested set. you may access hte nodex using 
+This call returns an array of root nodes (model instances) of the given nested set. You may access hte nodes using 
 the children property of each node.
 
 	
@@ -76,7 +76,7 @@ the children property of each node.
 
 	model.setParent([primary key value | model instance | query builder], [as last child]);
 
-This method can be called on any model instance of a nested set. it defines a new parentnode for the current node.
+This method can be called on any model instance of a nested set. It sets a new parentnode for the current node.
 
 	// load a node from the table
 	orm.tree({id:4}).findOne(function(err, node){
