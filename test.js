@@ -3,7 +3,7 @@
     var Class       = require('ee-class')
         , log       = require('ee-log')
         , async     = require('ee-async')
-        , ORM       = require('../ee-orm')
+        , ORM       = require('ee-orm')
         , project   = require('ee-project')
         , Extension = require('./');
 

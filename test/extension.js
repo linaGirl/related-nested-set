@@ -245,4 +245,44 @@
 			});
 		});
 	});
+
+
+
+	
+	describe('[Deleting]', function() {
+		it('deleting a node containing children should not be possible', function(done) {
+			db.tree({id: 2}).findOne(function(err, node) {
+				if (err) done(err);
+				else {
+					node.delete(function(err, deletedNode) {
+						assert(err instanceof Error);
+						done();
+					});
+				}
+			});
+		});
+
+		it('deleting a node not containing children', function(done) {
+			db.tree({id: 5}).findOne(function(err, node) {
+				if (err) done(err);
+				else {
+					node.delete(function(err, deletedNode) {
+						if (err) done(err);
+						else {
+							assert.equal(deletedNode.isDeleted(), true);
+							done();
+						}
+					});
+				}
+			});
+		});
+	});
+	
+
+		
+	describe('[TreeBuilding]', function() {
+		it('fetching the tree', function(done) {
+			db.tree().loadTree(expect('[{"id":2,"left":1,"right":2},{"id":1,"left":3,"right":8,"children":[{"id":6,"left":4,"right":5},{"id":4,"left":6,"right":7}]},{"id":3,"left":9,"right":12,"children":[{"id":7,"left":10,"right":11}]}]', done));
+		});
+	});
 	
