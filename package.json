@@ -1,7 +1,7 @@
 {
       "name"                        : "ee-orm-nested-set"
     , "description"                 : "Nested set implementation for the ee-orm package"
-    , "version"                     : "0.2.2"
+    , "version"                     : "0.2.3"
     , "homepage"                    : "https://github.com/eventEmitter/ee-orm-nested-set"
     , "author"                      : "Michael van der Weg <michael@eventemitter.com> (http://eventemitter.com/)" 
     , "licence"                     : "mit"
@@ -20,7 +20,7 @@
         , "ee-event-emitter"        : "0.1.x"
         , "ee-types"                : "0.1.x"
         , "ee-log"                  : "0.2.x"
-        , "ee-orm-extension"        : "^0.1.0"
+        , "ee-orm-extension"        : "^0.1.7"
     }
     , "devDependencies": {
           "mocha"                   : "1.17.x"
