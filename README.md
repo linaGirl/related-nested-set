@@ -1,78 +1,79 @@
-# ee-orm-nested-set
+# Related ORM Nested Set Extension
 
-Nested Set implementation for the ee-orm package. Inserts, updates, deletes nested set nodes, supporting concurrency. Fetches the tree for you from the DB. Supports multiple root nodes and multiple tree per table. Works on property names defined by you. Prevent nodes with childs from being deleted. it's simple :)
+Nested Sets for the [Related ORM](https://www.npmjs.com/package/ee-orm).
 
-## installation
+- Inserts, updates, deletes nested set nodes
+- Support for multiple root nodes and multiple trees per table
+- Works on any property names
+- Prevents nodes with child nodes from being deleted
 
-	npm install ee-orm-nested-set
+[![npm](https://img.shields.io/npm/dm/ee-orm-nested-set.svg?style=flat-square)](https://www.npmjs.com/package/v)
+[![Travis](https://img.shields.io/travis/eventEmitter/ee-orm-nested-set.svg?style=flat-square)](https://travis-ci.org/eventEmitter/ee-orm-nested-set)
+[![node](https://img.shields.io/node/v/ee-orm-nested-set.svg?style=flat-square)](https://nodejs.org/)
 
+## API
 
-## build status
+### Importing and loading
 
-[![Build Status](https://travis-ci.org/eventEmitter/ee-orm-nested-set.png?branch=master)](https://travis-ci.org/eventEmitter/ee-orm-nested-set)
+Import
 
-
-## usage
-
-The nested set has several options you can pass to it.
 	var   ORM 		= require('ee-orm')
 		, NestedSet = require('ee-orm-nested-set');
 
+Load the ORM
+
 	var orm = new ORM(dbConfig);
 
-	// create your instance, with the defaults set
-	// uf the extension find a property named «left» and one named «right»
-	// on a model it applies iteslf to it. 
+Load the extension using the default settings, the columns have the name `left` and `right`. The table contains one tree only.
+
+	orm.use(new NestedSet());
+
+Load using custom column names
+
+	orm.use(new NestedSet({
+		  left: 'lft'
+		, right: 'rgt'
+	}));
+
+Load for a table containing multiple tree grouped by a column
+
+	// myDB is the name of the db containing nested set table
+	// myTable is the table containing the nested set
+	orm.use(new NestedSet({
+		myDB: {
+			myTable: 'groupingColumn'
+		}
+	}));
+
+You may also set the grouping key afterwards
+
 	var nestedSet = new NestedSet();
 
-    // you may also define your own property names, now it looks for models
-    // with the «lft» and «rgt» properties
-    var nestedSet = new NestedSet({
-    	  left: 'lft'
-    	, right: 'rgt'
-    });
-
-    // if you need to store more than one tree per table you may specify a column
-    // which is used to separate the sets.
-    // myDbName is the db sepcified in the ee-orm db config, myTableName is the table
-    // to use this group key on
-    new NestedSetExtension({
-        myDbName: {
-            myTableName: {
-                groupKey: 'nestedSetId'
-            }
-        }
-    });
-
-
-    // attach the nested set to the orm instance
-    orm.use(nestedSet);
-
+	// add to orm
+	orm.use(nestedSet);
 
     // when the orm is loaded everything should be ready
-    orm.on('load', function(err) {
+    orm.load(function(err) {
 
+    	// add grouping
+    	nestedSet.setGroupKey(databaseName, modelName, keyName);
     });
 
 
-#### loadTree method
+### loadTree method
+
+Load a tree from a table which has only one tree stored in it
+	
+	orm.myDB.myTable().loadTree(function(err, tree){});
+
+Load a tree with the id 234 from a table which has multiple trees stored in it
+
+	orm.myDB.myTable().loadTree(234, function(err, tree){});
 
 	querybuilder.loadTree(callback);
 
-The ee-orm querybilder exposes the loadTree method on all nested set tables. You may build your query
-as ususal, and call the loadTree method instead of the find method.
 
-This call returns an array of root nodes (model instances) of the given nested set. You may access hte nodes using 
-the children property of each node.
-
-	
-	orm.tree([*]).loadTree(function(err, tree){
-		log(tree); // array containing all root nodes of the set
-		log(tree[0].children); // array containing all children of the first root node
-	});
-
-
-#### setParent method
+### setParent method
 
 	model.setParent([primary key value | model instance | query builder], [as last child]);
 
@@ -104,7 +105,7 @@ This method can be called on any model instance of a nested set. It sets a new p
 	});
 
 
-#### after method
+### after method
 
 	model.after(primary key value | model instance | query builder);
 
@@ -133,7 +134,7 @@ Positions this model after another model on the same level
 
 
 
-#### before method
+### before method
 
 	model.before(primary key value | model instance | query builder);
 
