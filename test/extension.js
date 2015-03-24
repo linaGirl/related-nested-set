@@ -76,7 +76,7 @@
 	var expect = function(val, cb){
 		if (typeof val === 'string') val = JSON.parse(val);
 
-		return function(err, result) {// log(getJSON(result), JSON.stringify(result));
+		return function(err, result) { //log(getJSON(result), val, JSON.stringify(result), JSON.stringify(val));
 			try {
 				assert.deepEqual(getJSON(result), val);
 			} catch (err) {
@@ -351,6 +351,18 @@
 		it('setting the group key', function() {
 			extension.setGroupKey('ee_orm_nestedset_test', 'tree', 'group');
 		});
+
+
+		it('createing a second tree', function(done) {
+			new db.tree({name: 'secondTree', group:1000}).setParent().save(function(err, node) {
+				if (err) done(err);
+				else {
+					assert.equal(node.left, 1);
+					assert.equal(node.right, 2);
+					done();
+				}
+			});
+		});
 	});
 
 
@@ -362,8 +374,6 @@
 
 	describe('[Inserting]', function() {
 		it('should set corrent position parameters when inserting records', function(done) {
-
-
 			new db.tree({name: 'root1', group:999}).setParent().save(function(err, node) {
 				if (err) done(err);
 				else {
@@ -406,7 +416,7 @@
 		it('should set corrent position parameters when inserting a node as child of another node using an id', function(done) {
 			db = orm.ee_orm_nestedset_test;
 
-			new db.tree({name: 'child1.1', group: 999}).setParent(17).save(function(err, node) {
+			new db.tree({name: 'child1.1', group: 999}).setParent(18).save(function(err, node) {
 				if (err) done(err);
 				else {
 					assert.equal(node.left, 4);
@@ -421,7 +431,7 @@
 		it('should set corrent position parameters when inserting a node as child of another node using a query', function(done) {
 			db = orm.ee_orm_nestedset_test;
 
-			new db.tree({name: 'child1.2', group: 999}).setParent(db.tree({id:17})).save(function(err, node) {
+			new db.tree({name: 'child1.2', group: 999}).setParent(db.tree({id:18})).save(function(err, node) {
 				if (err) done(err);
 				else {
 					assert.equal(node.left, 4);
@@ -459,7 +469,7 @@
 			db.tree({name: 'child1.2', group: 999}, ['*']).findOne(function(err, model) {
 				if (err) done(err);
 				else {
-					new db.tree({name: 'child1.4', group: 999}).before(21).save(function(err, node) {
+					new db.tree({name: 'child1.4', group: 999}).before(22).save(function(err, node) {
 						if (err) done(err);
 						else {
 							assert.equal(node.left, 4);
@@ -476,10 +486,10 @@
 
 	describe('[Updating]', function() {
 		it('setting a new parent, moving left', function(done) {
-			db.tree({id: 21}, '*').findOne(function(err, node) {
+			db.tree({id: 22}, '*').findOne(function(err, node) {
 				if (err) done(err);
 				else {
-					node.setParent(18).save(function(err, movedNode) {
+					node.setParent(19).save(function(err, movedNode) {
 						if (err) done(err);
 						else {
 							assert.equal(movedNode.left, 2);
@@ -492,10 +502,10 @@
 		});
 
 		it('setting a new parent, moving right', function(done) {
-			db.tree({id: 23}, '*').findOne(function(err, node) {
+			db.tree({id: 24}, '*').findOne(function(err, node) {
 				if (err) done(err);
 				else {
-					node.setParent(19).save(function(err, movedNode) {
+					node.setParent(20).save(function(err, movedNode) {
 						if (err) done(err);
 						else {
 							assert.equal(movedNode.left, 12);
@@ -510,10 +520,9 @@
 
 
 
-
 	describe('[Deleting]', function() {
 		it('deleting a node containing children should not be possible', function(done) {
-			db.tree({id: 18}).findOne(function(err, node) {
+			db.tree({id: 19}).findOne(function(err, node) {
 				if (err) done(err);
 				else {
 					node.delete(function(err, deletedNode) {
@@ -525,7 +534,7 @@
 		});
 
 		it('deleting a node not containing children', function(done) {
-			db.tree({id: 22}).findOne(function(err, node) {
+			db.tree({id: 23}).findOne(function(err, node) {
 				if (err) done(err);
 				else {
 					node.delete(function(err, deletedNode) {
@@ -541,26 +550,29 @@
 	});
 
 
-
 	describe('[TreeBuilding]', function() {
 		it('fetching the tree', function(done) {
-			db.tree().loadTree(999, expect('[{"id":18,"name":"root2","right":4,"left":1,"group":999,"children":[{"id":21,"name":"child1.2","right":3,"left":2,"group":999}]},{"id":17,"name":"root1","right":8,"left":5,"group":999,"children":[{"id":20,"name":"child1.1","right":7,"left":6,"group":999}]},{"id":19,"name":"root3","right":12,"left":9,"group":999,"children":[{"id":23,"name":"child1.4","right":11,"left":10,"group":999}]}]', done));
+			db.tree().loadTree(999, expect('[{"id":19,"name":"root2","group":999,"left":1,"right":4,"children":[{"id":22,"name":"child1.2","group":999,"left":2,"right":3}]},{"id":18,"name":"root1","group":999,"left":5,"right":8,"children":[{"id":21,"name":"child1.1","group":999,"left":6,"right":7}]},{"id":20,"name":"root3","group":999,"left":9,"right":12,"children":[{"id":24,"name":"child1.4","group":999,"left":10,"right":11}]}]', done));
 		});
 	});
 
 
 
 	describe('[Tree Syncing]', function() {
-		it('updating an exsiiting tree', function(done) {
+		it('updating an exsisting tree', function(done) {
 			db.tree().loadTree(999, function(err, tree) {
 				if (err) done(err);
 				else {
 					tree[1].children = [];
 					tree[2].children.push({});
 
-					db.tree().syncTree(tree, expect('[{"id":18,"left":1,"group":999,"name":"root2","right":4,"children":[{"id":21,"left":2,"group":999,"name":"child1.2","right":3}]},{"id":17,"left":5,"group":999,"name":"root1","right":6},{"id":19,"left":7,"group":999,"name":"root3","right":12,"children":[{"id":23,"left":8,"group":999,"name":"child1.4","right":9},{"id":24,"left":10,"group":999,"name":null,"right":11}]}]', done));
+					db.tree().syncTree(tree, expect('[{"id":19,"name":"root2","group":999,"left":1,"right":4,"children":[{"id":22,"name":"child1.2","group":999,"left":2,"right":3}]},{"id":18,"name":"root1","group":999,"left":5,"right":6},{"id":20,"name":"root3","group":999,"left":7,"right":12,"children":[{"id":24,"name":"child1.4","group":999,"left":8,"right":9},{"id":25,"name":null,"group":999,"left":10,"right":11}]}]', done));
 				}
 			});
+		});
+
+		it('the second tree should be correct', function(done) {
+			db.tree().loadTree(1000, expect('[{"id":17,"name":"secondTree","group":1000,"left":1,"right":2}]', done));
 		});
 
 		it('truncating the table', function(done) {
@@ -585,6 +597,6 @@
 				}
 				, {name: '3'}
 				, {name: '4'}
-			], expect('[{"id":25,"left":1,"group":999,"right":2,"name":"1"},{"id":26,"left":3,"group":999,"right":12,"name":"2","children":[{"id":27,"left":4,"group":999,"right":5,"name":"2_1"},{"id":28,"left":6,"group":999,"right":7,"name":"2_2"},{"id":29,"left":8,"group":999,"right":11,"name":"2_3","children":[{"id":30,"left":9,"group":999,"right":10,"name":"2_3_1"}]}]},{"id":31,"left":13,"group":999,"right":14,"name":"3"},{"id":32,"left":15,"group":999,"right":16,"name":"4"}]', done));
+			], expect('[{"id":26,"name":"1","group":999,"left":1,"right":2},{"id":27,"name":"2","group":999,"left":3,"right":12,"children":[{"id":28,"name":"2_1","group":999,"left":4,"right":5},{"id":29,"name":"2_2","group":999,"left":6,"right":7},{"id":30,"name":"2_3","group":999,"left":8,"right":11,"children":[{"id":31,"name":"2_3_1","group":999,"left":9,"right":10}]}]},{"id":32,"name":"3","group":999,"left":13,"right":14},{"id":33,"name":"4","group":999,"left":15,"right":16}]', done));
 		});
 	});
