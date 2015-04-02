@@ -1,19 +1,19 @@
 {
-      "name"                        : "ee-orm-nested-set"
+      "name"                        : "related-nested-set"
     , "description"                 : "Nested set implementation for the ee-orm package"
-    , "version"                     : "0.3.2"
-    , "homepage"                    : "https://github.com/eventEmitter/ee-orm-nested-set"
-    , "author"                      : "Michael van der Weg <michael@eventemitter.com> (http://eventemitter.com/)"
+    , "version"                     : "0.4.0"
+    , "homepage"                    : "https://github.com/eventEmitter/related-nested-set"
+    , "author"                      : "Michael van der Weg <michael@joinbox.com> (http://joinbox.com/)"
     , "licence"                     : "mit"
     , "repository": {
-          "url"                     : "https://github.com/eventEmitter/ee-orm-nested-set.git"
+          "url"                     : "https://github.com/eventEmitter/related-nested-set.git"
         , "type"                    : "git"
     }
     , "engines": {
         "node"                      : ">=v0.10.17"
     }
     , "bugs": {
-        "url"                       : "https://github.com/eventEmitter/ee-orm-nested-set/issues"
+        "url"                       : "https://github.com/eventEmitter/related-nested-set/issues"
     }
     , "dependencies": {
           "ee-class"                : "1.0.x"
@@ -21,19 +21,19 @@
         , "ee-types"                : "0.1.x"
         , "ee-log"                  : "0.2.x"
         , "es6-promise"             : "2.0.x"
-        , "ee-orm-extension"        : "^0.1.7"
+        , "related-extension"       : "0.4.x"
         , "ee-async"                : "^0.2.10"
     }
     , "devDependencies": {
           "mocha"                   : "1.17.x"
         , "ee-project"              : "0.2.x"
-        , "ee-orm"                  : "0.16.x"
+        , "related"                 : "x.x.x"
     }
     , "peerDependencies": {
-          "ee-orm"                  : "^0.16.x"
+          "related"                 : "x.x.x"
     }
     , "optionalDependencies": {}
-    , "keywords"                    : ["ee", "orm", "nested-set", "extension"]
+    , "keywords"                    : ["related", "orm", "nested-set", "extension"]
     , "scripts": {
         "test"                      : "./node_modules/mocha/bin/mocha --reporter spec --bail"
     }

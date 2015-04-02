@@ -6,7 +6,7 @@
 		, assert 		= require('assert')
 		, async 		= require('ee-async')
 		, fs 			= require('fs')
-		, ORM 			= require('ee-orm');
+		, ORM 			= require('related');
 
 
 
@@ -35,7 +35,7 @@
 			} catch(e) {
 				config = [{
 					  type: 'postgres'
-					, schema: 'ee_orm_nestedset_test'
+					, schema: 'related_nestedset_test'
 					, database: 'test'
 					, hosts: [{
 						  host 		: 'localhost'
@@ -54,7 +54,7 @@
 		});
 
 		it('should be able to drop & create the testing schema ('+sqlStatments.length+' raw SQL queries)', function(done) {
-			orm.getDatabase('ee_orm_nestedset_test').getConnection(function(err, connection) {
+			orm.getDatabase('related_nestedset_test').getConnection(function(err, connection) {
 				if (err) done(err);
 				else async.each(sqlStatments, connection.queryRaw.bind(connection), done);
 			});
@@ -91,7 +91,7 @@
 		var oldDate;
 
 		it('should not crash when instatiated', function() {
-			db = orm.ee_orm_nestedset_test;
+			db = orm.related_nestedset_test;
 			extension = new NestedSet();
 		});
 
@@ -102,7 +102,7 @@
 		});
 
 		it('set var should work ;)', function() {
-			db = orm.ee_orm_nestedset_test;
+			db = orm.related_nestedset_test;
 		});
 
 
@@ -123,7 +123,7 @@
 		});
 
 		it('should set corrent position parameters when inserting a root node above another node', function(done) {
-			db = orm.ee_orm_nestedset_test;
+			db = orm.related_nestedset_test;
 
 			new db.tree({name: 'root2'}).setParent().save(function(err, node) {
 				if (err) done(err);
@@ -137,7 +137,7 @@
 
 
 		it('should set corrent position parameters when inserting a root node below another node', function(done) {
-			db = orm.ee_orm_nestedset_test;
+			db = orm.related_nestedset_test;
 
 			new db.tree({name: 'root3'}).setParent(null, true).save(function(err, node) {
 				if (err) done(err);
@@ -152,7 +152,7 @@
 
 
 		it('should set corrent position parameters when inserting a node as child of another node using an id', function(done) {
-			db = orm.ee_orm_nestedset_test;
+			db = orm.related_nestedset_test;
 
 			new db.tree({name: 'child1.1'}).setParent(1).save(function(err, node) {
 				if (err) done(err);
@@ -167,7 +167,7 @@
 
 
 		it('should set corrent position parameters when inserting a node as child of another node using a query', function(done) {
-			db = orm.ee_orm_nestedset_test;
+			db = orm.related_nestedset_test;
 
 			new db.tree({name: 'child1.2'}).setParent(db.tree({id:1})).save(function(err, node) {
 				if (err) done(err);
@@ -182,7 +182,7 @@
 
 
 		it('should set corrent position parameters when inserting a node after another node using a model', function(done) {
-			db = orm.ee_orm_nestedset_test;
+			db = orm.related_nestedset_test;
 
 			db.tree({name: 'child1.2'}, ['*']).findOne(function(err, model) {
 				if (err) done(err);
@@ -202,7 +202,7 @@
 
 
 		it('should set corrent position parameters when inserting before another node using an id', function(done) {
-			db = orm.ee_orm_nestedset_test;
+			db = orm.related_nestedset_test;
 
 			db.tree({name: 'child1.2'}, ['*']).findOne(function(err, model) {
 				if (err) done(err);
@@ -349,7 +349,7 @@
 		});
 
 		it('setting the group key', function() {
-			extension.setGroupKey('ee_orm_nestedset_test', 'tree', 'group');
+			extension.setGroupKey('related_nestedset_test', 'tree', 'group');
 		});
 
 
@@ -385,7 +385,7 @@
 		});
 
 		it('should set corrent position parameters when inserting a root node above another node', function(done) {
-			db = orm.ee_orm_nestedset_test;
+			db = orm.related_nestedset_test;
 
 			new db.tree({name: 'root2', group: 999}).setParent().save(function(err, node) {
 				if (err) done(err);
@@ -399,7 +399,7 @@
 
 
 		it('should set corrent position parameters when inserting a root node below another node', function(done) {
-			db = orm.ee_orm_nestedset_test;
+			db = orm.related_nestedset_test;
 
 			new db.tree({name: 'root3', group: 999}).setParent(null, true).save(function(err, node) {
 				if (err) done(err);
@@ -414,7 +414,7 @@
 
 
 		it('should set corrent position parameters when inserting a node as child of another node using an id', function(done) {
-			db = orm.ee_orm_nestedset_test;
+			db = orm.related_nestedset_test;
 
 			new db.tree({name: 'child1.1', group: 999}).setParent(18).save(function(err, node) {
 				if (err) done(err);
@@ -429,7 +429,7 @@
 
 
 		it('should set corrent position parameters when inserting a node as child of another node using a query', function(done) {
-			db = orm.ee_orm_nestedset_test;
+			db = orm.related_nestedset_test;
 
 			new db.tree({name: 'child1.2', group: 999}).setParent(db.tree({id:18})).save(function(err, node) {
 				if (err) done(err);
@@ -444,7 +444,7 @@
 
 
 		it('should set corrent position parameters when inserting a node after another node using a model', function(done) {
-			db = orm.ee_orm_nestedset_test;
+			db = orm.related_nestedset_test;
 
 			db.tree({name: 'child1.2', group: 999}, ['*']).findOne(function(err, model) {
 				if (err) done(err);
@@ -464,7 +464,7 @@
 
 
 		it('should set corrent position parameters when inserting before another node using an id', function(done) {
-			db = orm.ee_orm_nestedset_test;
+			db = orm.related_nestedset_test;
 
 			db.tree({name: 'child1.2', group: 999}, ['*']).findOne(function(err, model) {
 				if (err) done(err);

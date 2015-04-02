@@ -147,8 +147,8 @@ Positions this model before another model on the same level
 		node.before(45);
 
 
-		// store before the modelInstance
-		node.before(modelInstance);
+		// store before the modelInstanc
+e		node.before(modelInstance);
 
 
 		// store before the node with the name «charlie»
