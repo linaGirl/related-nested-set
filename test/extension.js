@@ -254,6 +254,18 @@
 				}
 			});
 		});
+
+		it('setting myself as parent should fail!', function(done) {
+			db.tree({id: 7}).findOne(function(err, node) {
+				if (err) done(err);
+				else {
+					node.setParent(7).save(function(err, movedNode) {
+						if (err) done();
+						else done(new Error('self references are not ok!'));
+					});
+				}
+			});
+		});
 	});
 
 
@@ -343,7 +355,7 @@
 
 
 
-	describe('Perparation for the Group Key Tests', function() {
+	describe('[Perparation for the Group Key Tests]', function() {
 		it('truncating the table', function(done) {
 			db.tree().delete(done);
 		});
@@ -373,8 +385,19 @@
 
 
 	describe('[Inserting]', function() {
-		it('should set corrent position parameters when inserting records', function(done) {
+		it('should set corrent position parameters when inserting a node', function(done) {
 			new db.tree({name: 'root1', group:999}).setParent().save(function(err, node) {
+				if (err) done(err);
+				else {
+					assert.equal(node.left, 1);
+					assert.equal(node.right, 2);
+					done();
+				}
+			});
+		});
+
+		it('should set corrent position parameters when inserting a node another group', function(done) {
+			new db.tree({name: 'thirdTree', group:1}).setParent().save(function(err, node) {
 				if (err) done(err);
 				else {
 					assert.equal(node.left, 1);
@@ -469,7 +492,7 @@
 			db.tree({name: 'child1.2', group: 999}, ['*']).findOne(function(err, model) {
 				if (err) done(err);
 				else {
-					new db.tree({name: 'child1.4', group: 999}).before(22).save(function(err, node) {
+					new db.tree({name: 'child1.4', group: 999}).before(23).save(function(err, node) {
 						if (err) done(err);
 						else {
 							assert.equal(node.left, 4);
@@ -486,10 +509,10 @@
 
 	describe('[Updating]', function() {
 		it('setting a new parent, moving left', function(done) {
-			db.tree({id: 22}, '*').findOne(function(err, node) {
+			db.tree({id: 23}, '*').findOne(function(err, node) {
 				if (err) done(err);
 				else {
-					node.setParent(19).save(function(err, movedNode) {
+					node.setParent(20).save(function(err, movedNode) {
 						if (err) done(err);
 						else {
 							assert.equal(movedNode.left, 2);
@@ -502,10 +525,10 @@
 		});
 
 		it('setting a new parent, moving right', function(done) {
-			db.tree({id: 24}, '*').findOne(function(err, node) {
+			db.tree({id: 25}, '*').findOne(function(err, node) {
 				if (err) done(err);
 				else {
-					node.setParent(20).save(function(err, movedNode) {
+					node.setParent(21).save(function(err, movedNode) {
 						if (err) done(err);
 						else {
 							assert.equal(movedNode.left, 12);
@@ -516,13 +539,25 @@
 				}
 			});
 		});
+
+		it('setting a new parent from another group should fail', function(done) {
+			db.tree({id: 24}, '*').findOne(function(err, node) {
+				if (err) done(err);
+				else {
+					node.setParent(19).save(function(err, movedNode) {
+						if (err) done();
+						else done(new Error('should not be able to set parents from another group!'));
+					});
+				}
+			});
+		});
 	});
 
 
 
 	describe('[Deleting]', function() {
 		it('deleting a node containing children should not be possible', function(done) {
-			db.tree({id: 19}).findOne(function(err, node) {
+			db.tree({id: 20}).findOne(function(err, node) {
 				if (err) done(err);
 				else {
 					node.delete(function(err, deletedNode) {
@@ -534,7 +569,7 @@
 		});
 
 		it('deleting a node not containing children', function(done) {
-			db.tree({id: 23}).findOne(function(err, node) {
+			db.tree({id: 24}).findOne(function(err, node) {
 				if (err) done(err);
 				else {
 					node.delete(function(err, deletedNode) {
@@ -552,7 +587,7 @@
 
 	describe('[TreeBuilding]', function() {
 		it('fetching the tree', function(done) {
-			db.tree().loadTree(999, expect('[{"id":19,"name":"root2","group":999,"left":1,"right":4,"children":[{"id":22,"name":"child1.2","group":999,"left":2,"right":3}]},{"id":18,"name":"root1","group":999,"left":5,"right":8,"children":[{"id":21,"name":"child1.1","group":999,"left":6,"right":7}]},{"id":20,"name":"root3","group":999,"left":9,"right":12,"children":[{"id":24,"name":"child1.4","group":999,"left":10,"right":11}]}]', done));
+			db.tree().loadTree(999, expect('[{"id":20,"name":"root2","group":999,"left":1,"right":4,"children":[{"id":23,"name":"child1.2","group":999,"left":2,"right":3}]},{"id":18,"name":"root1","group":999,"left":5,"right":8,"children":[{"id":22,"name":"child1.1","group":999,"left":6,"right":7}]},{"id":21,"name":"root3","group":999,"left":9,"right":12,"children":[{"id":25,"name":"child1.4","group":999,"left":10,"right":11}]}]', done));
 		});
 	});
 
@@ -566,7 +601,7 @@
 					tree[1].children = [];
 					tree[2].children.push({});
 
-					db.tree().syncTree(tree, expect('[{"id":19,"name":"root2","group":999,"left":1,"right":4,"children":[{"id":22,"name":"child1.2","group":999,"left":2,"right":3}]},{"id":18,"name":"root1","group":999,"left":5,"right":6},{"id":20,"name":"root3","group":999,"left":7,"right":12,"children":[{"id":24,"name":"child1.4","group":999,"left":8,"right":9},{"id":25,"name":null,"group":999,"left":10,"right":11}]}]', done));
+					db.tree().syncTree(tree, expect('[{"id":20,"name":"root2","group":999,"left":1,"right":4,"children":[{"id":23,"name":"child1.2","group":999,"left":2,"right":3}]},{"id":18,"name":"root1","group":999,"left":5,"right":6},{"id":21,"name":"root3","group":999,"left":7,"right":12,"children":[{"id":25,"name":"child1.4","group":999,"left":8,"right":9},{"id":26,"name":null,"group":999,"left":10,"right":11}]}]', done));
 				}
 			});
 		});
@@ -597,6 +632,6 @@
 				}
 				, {name: '3'}
 				, {name: '4'}
-			], expect('[{"id":26,"name":"1","group":999,"left":1,"right":2},{"id":27,"name":"2","group":999,"left":3,"right":12,"children":[{"id":28,"name":"2_1","group":999,"left":4,"right":5},{"id":29,"name":"2_2","group":999,"left":6,"right":7},{"id":30,"name":"2_3","group":999,"left":8,"right":11,"children":[{"id":31,"name":"2_3_1","group":999,"left":9,"right":10}]}]},{"id":32,"name":"3","group":999,"left":13,"right":14},{"id":33,"name":"4","group":999,"left":15,"right":16}]', done));
+			], expect('[{"id":27,"name":"1","group":999,"left":1,"right":2},{"id":28,"name":"2","group":999,"left":3,"right":12,"children":[{"id":29,"name":"2_1","group":999,"left":4,"right":5},{"id":30,"name":"2_2","group":999,"left":6,"right":7},{"id":31,"name":"2_3","group":999,"left":8,"right":11,"children":[{"id":32,"name":"2_3_1","group":999,"left":9,"right":10}]}]},{"id":33,"name":"3","group":999,"left":13,"right":14},{"id":34,"name":"4","group":999,"left":15,"right":16}]', done));
 		});
 	});
