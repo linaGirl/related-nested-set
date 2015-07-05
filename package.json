@@ -1,7 +1,7 @@
 {
       "name"                        : "related-nested-set"
     , "description"                 : "Nested set implementation for the ee-orm package"
-    , "version"                     : "0.4.1"
+    , "version"                     : "0.4.2"
     , "homepage"                    : "https://github.com/eventEmitter/related-nested-set"
     , "author"                      : "Michael van der Weg <michael@joinbox.com> (http://joinbox.com/)"
     , "licence"                     : "mit"
