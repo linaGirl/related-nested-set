@@ -551,6 +551,23 @@
 				}
 			});
 		});
+
+		it('setting a new parent from another group should work when the group on the source was changed', function(done) {
+			db.tree({id: 24}, '*').findOne(function(err, node) {
+				if (err) done(err);
+				else {
+					node.group = 1;
+					node.setParent(19).save(function(err, movedNode) {
+						if (err) done(err);
+						else {
+							assert.equal(movedNode.left, 2);
+							assert.equal(movedNode.right, 3);
+							done();
+						}
+					});
+				}
+			});
+		});
 	});
 
 
