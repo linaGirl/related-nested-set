@@ -1,7 +1,7 @@
 {
       "name"                        : "related-nested-set"
     , "description"                 : "Nested set implementation for the ee-orm package"
-    , "version"                     : "0.4.4"
+    , "version"                     : "1.0.0"
     , "homepage"                    : "https://github.com/eventEmitter/related-nested-set"
     , "author"                      : "Michael van der Weg <michael@joinbox.com> (http://joinbox.com/)"
     , "licence"                     : "mit"
@@ -10,17 +10,16 @@
         , "type"                    : "git"
     }
     , "engines": {
-        "node"                      : ">=v0.10.17"
+        "node"                      : ">=v4"
     }
     , "bugs": {
         "url"                       : "https://github.com/eventEmitter/related-nested-set/issues"
     }
     , "dependencies": {
-          "ee-class"                : "1.0.x"
-        , "ee-event-emitter"        : "0.1.x"
-        , "ee-types"                : "0.1.x"
-        , "ee-log"                  : "0.2.x"
-        , "es6-promise"             : "2.0.x"
+          "ee-class"                : "1.x"
+        , "ee-types"                : "1.x"
+        , "ee-event-emitter"        : "0.3.x"
+        , "ee-log"                  : "0.3.x"
         , "related-extension"       : "0.4.x"
         , "ee-async"                : "^0.2.10"
         , "async-method"            : "0.1.x"
@@ -28,10 +27,10 @@
     , "devDependencies": {
           "mocha"                   : "1.17.x"
         , "ee-project"              : "0.2.x"
-        , "related"                 : "x.x.x"
+        , "related"                 : "1.x"
     }
     , "peerDependencies": {
-          "related"                 : "x.x.x"
+          "related"                 : "1.x"
     }
     , "optionalDependencies": {}
     , "keywords"                    : ["related", "orm", "nested-set", "extension"]
