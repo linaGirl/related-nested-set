@@ -1,15 +1,15 @@
 # Related ORM Nested Set Extension
 
-Nested Sets for the [Related ORM](https://www.npmjs.com/package/ee-orm).
+Nested Sets for the [Related ORM](https://www.npmjs.com/package/related).
 
 - Inserts, updates, deletes nested set nodes
 - Support for multiple root nodes and multiple trees per table
 - Works on any property names
 - Prevents nodes with child nodes from being deleted
 
-[![npm](https://img.shields.io/npm/dm/ee-orm-nested-set.svg?style=flat-square)](https://www.npmjs.com/package/v)
-[![Travis](https://img.shields.io/travis/eventEmitter/ee-orm-nested-set.svg?style=flat-square)](https://travis-ci.org/eventEmitter/ee-orm-nested-set)
-[![node](https://img.shields.io/node/v/ee-orm-nested-set.svg?style=flat-square)](https://nodejs.org/)
+[![npm](https://img.shields.io/npm/dm/related-nested-set.svg?style=flat-square)](https://www.npmjs.com/package/v)
+[![Travis](https://img.shields.io/travis/eventEmitter/related-nested-set.svg?style=flat-square)](https://travis-ci.org/eventEmitter/related-nested-set)
+[![node](https://img.shields.io/node/v/related-nested-set.svg?style=flat-square)](https://nodejs.org/)
 
 ## API
 
@@ -17,8 +17,8 @@ Nested Sets for the [Related ORM](https://www.npmjs.com/package/ee-orm).
 
 Import
 
-	var   ORM 		= require('ee-orm')
-		, NestedSet = require('ee-orm-nested-set');
+	var   ORM 		= require('related')
+		, NestedSet = require('related-nested-set');
 
 Load the ORM
 
