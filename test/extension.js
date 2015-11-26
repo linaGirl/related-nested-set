@@ -1,3 +1,6 @@
+(function() {
+	'use strict';
+
 
 	process.env.debug_sql = true;
 
@@ -54,10 +57,22 @@
 		});
 
 		it('should be able to drop & create the testing schema ('+sqlStatments.length+' raw SQL queries)', function(done) {
-			orm.getDatabase('related_nestedset_test').getConnection(function(err, connection) {
-				if (err) done(err);
-				else async.each(sqlStatments, connection.queryRaw.bind(connection), done);
-			});
+			orm.getDatabase('related_nestedset_test').getConnection('write').then((connection) => {
+                return new Promise((resolve, reject) => {
+                    let exec = (index) => {
+                        if (sqlStatments[index]) {
+                            connection.query(sqlStatments[index]).then(() => {
+                                exec(index + 1);
+                            }).catch(reject);
+                        }
+                        else resolve();
+                    }
+
+                    exec(0);
+                });
+            }).then(() => {
+                done();
+            }).catch(done);
 		});
 	});
 
@@ -709,3 +724,4 @@
 			], expect('[{"id":38,"name":"1","group":999,"left":1,"right":2},{"id":39,"name":"2","group":999,"left":3,"right":12,"children":[{"id":40,"name":"2_1","group":999,"left":4,"right":5},{"id":41,"name":"2_2","group":999,"left":6,"right":7},{"id":42,"name":"2_3","group":999,"left":8,"right":11,"children":[{"id":43,"name":"2_3_1","group":999,"left":9,"right":10}]}]},{"id":44,"name":"3","group":999,"left":13,"right":14},{"id":45,"name":"4","group":999,"left":15,"right":16}]', done));
 		});
 	});
+})();
