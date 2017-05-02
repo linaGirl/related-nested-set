@@ -1,5 +1,7 @@
 # Related ORM Nested Set Extension
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/eventEmitter/related-nested-set.svg)](https://greenkeeper.io/)
+
 Nested Sets for the [Related ORM](https://www.npmjs.com/package/related).
 
 - Inserts, updates, deletes nested set nodes
